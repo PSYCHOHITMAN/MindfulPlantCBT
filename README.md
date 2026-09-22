@@ -88,5 +88,3 @@ See that repo's own README for deployment steps (it's set up to deploy on Render
 - Sync is one-way, on-demand ("Sync now"), not continuous background sync, and assumes one
   device per user (last-write-wins, no conflict merging) this was a deliberate scope
   decision from the Part 1 planning document, not an oversight.
-- A handful of UI strings added late in development haven't been translated into isiZulu or
-  Sesotho yet.
