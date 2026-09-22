@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sesotho translations. Only user-facing strings are translated, per the
+  Planning and Design document's simplified scope for multi-language
+  support (Section 8.1).
+  [PERSONALISE] Please have these reviewed by a fluent Sesotho speaker
+  before final submission - these are starting-point translations.
+-->
+<resources>
+    <string name="app_name">Mindful Plant CBT</string>
+
+    <string name="login_title">Motswalle wa hao wa bophelo ba kelello</string>
+    <string name="app_logo_description">Letshwao la Mindful Plant</string>
+    <string name="login_email_hint">Aterese ya imeile</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Kena</string>
+    <string name="login_sso_button">Tswela pele ka Google</string>
+    <string name="login_register_prompt">O motjha mona? Ingodise</string>
+
+    <string name="register_title">Theha Akhaonto</string>
+    <string name="register_name_hint">Lebitso le felletseng</string>
+    <string name="register_confirm_password_hint">Netefatsa password</string>
+    <string name="register_button">Ingodise</string>
+    <string name="register_password_note">Password ya hao e sirelelitswe mme ha e arolelanwe.</string>
+    <string name="register_login_prompt">O na le akhaonto? Kena</string>
+
+    <string name="home_greeting">Lumela</string>
+    <string name="home_greeting_meta">Thapama,</string>
+    <string name="home_new_record_button">+ Monahano o motjha</string>
+
+    <string name="record_situation_hint">Boemo: Ho etsahetseng?</string>
+    <string name="record_thought_hint">Monahano wa tlhaho</string>
+    <string name="record_distortion_hint">Mofuta wa phoso ya monahano</string>
+    <string name="record_reframe_hint">Monahano o lekantsweng</string>
+    <string name="record_mood_before_label">Maikutlo pele</string>
+    <string name="record_mood_after_label">Maikutlo kamora</string>
+    <string name="record_save_button">Boloka</string>
+
+    <string name="history_title">Nalane ya Maikutlo</string>
+    <string name="history_all_entries">Dikenyo tsohle</string>
+    <string name="history_pending_sync">E emetse ho kopantshwa</string>
+    <string name="history_sync_now">Kopantsha jwale</string>
+
+    <string name="insights_title">Temoho</string>
+    <string name="insights_most_logged_distortion">Phoso e hlahang hangata</string>
+    <string name="insight_tip_one">Ela hloko maemo a o phahamisang — ke dintlha tsa hao tsa matla.</string>
+    <string name="insight_tip_two">Tlwaelo ya hao ya ho fetola menahano e a thusa.</string>
+    <string name="insight_tip_three">Arolelana katleho e le nngwe bekeng ena le motho eo o mo tshepang.</string>
+
+    <string name="settings_title">Diteko</string>
+    <string name="settings_language">Puo</string>
+    <string name="settings_reminder_time">Nako ya hopotso</string>
+    <string name="settings_change_password">Fetola password</string>
+    <string name="settings_log_out">Tswa</string>
+
+    <string name="nav_home">Lehae</string>
+    <string name="nav_history">Nalane</string>
+    <string name="nav_insights">Temoho</string>
+    <string name="nav_settings">Diteko</string>
+</resources>

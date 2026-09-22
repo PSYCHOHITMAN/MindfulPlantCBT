@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  isiZulu translations. Only user-facing strings are translated, per the
+  Planning and Design document's simplified scope for multi-language
+  support (Section 8.1) - not every internal/log string needs translating.
+  [PERSONALISE] Please have these reviewed by a fluent isiZulu speaker
+  before final submission - these are starting-point translations.
+-->
+<resources>
+    <string name="app_name">Mindful Plant CBT</string>
+
+    <string name="login_title">Umlingani wakho wempilo yengqondo</string>
+    <string name="app_logo_description">Uphawu lwe-Mindful Plant</string>
+    <string name="login_email_hint">Ikheli le-imeyili</string>
+    <string name="login_password_hint">Iphasiwedi</string>
+    <string name="login_button">Ngena</string>
+    <string name="login_sso_button">Qhubeka nge-Google</string>
+    <string name="login_register_prompt">Umuntu omusha? Bhalisa</string>
+
+    <string name="register_title">Dala i-Akhawunti</string>
+    <string name="register_name_hint">Igama eliphelele</string>
+    <string name="register_confirm_password_hint">Qinisekisa iphasiwedi</string>
+    <string name="register_button">Bhalisa</string>
+    <string name="register_password_note">Iphasiwedi yakho ibethelwe futhi ayabelwana.</string>
+    <string name="register_login_prompt">Usunayo i-akhawunti? Ngena</string>
+
+    <string name="home_greeting">Sawubona</string>
+    <string name="home_greeting_meta">Ntambama,</string>
+    <string name="home_new_record_button">+ Umcabango Omusha</string>
+
+    <string name="record_situation_hint">Isimo: Kwenzekeni?</string>
+    <string name="record_thought_hint">Umcabango ozenzakalelayo</string>
+    <string name="record_distortion_hint">Uhlobo lokuhlanekezela</string>
+    <string name="record_reframe_hint">Umcabango olinganisiwe</string>
+    <string name="record_mood_before_label">Isimo ngaphambi</string>
+    <string name="record_mood_after_label">Isimo somqondo ngemuva</string>
+    <string name="record_save_button">Londoloza</string>
+
+    <string name="history_title">Umlando Wesimo Somqondo</string>
+    <string name="history_all_entries">Konke okufakiwe</string>
+    <string name="history_pending_sync">Kulindele ukuvumelaniswa</string>
+    <string name="history_sync_now">Vumelanisa manje</string>
+
+    <string name="insights_title">Imibono</string>
+    <string name="insights_most_logged_distortion">Uhlobo oluvame kakhulu</string>
+    <string name="insight_tip_one">Qaphela izimo ezikukhuphulayo — yizo izisekelo zakho.</string>
+    <string name="insight_tip_two">Umkhuba wakho wokulungisa imicabango uyasebenza.</string>
+    <string name="insight_tip_three">Cabanga ukwabelana ngokunqoba okukodwa kuleli sonto nomuntu omethembayo.</string>
+
+    <string name="settings_title">Izilungiselelo</string>
+    <string name="settings_language">Ulimi</string>
+    <string name="settings_reminder_time">Isikhathi sesikhumbuzo</string>
+    <string name="settings_change_password">Shintsha iphasiwedi</string>
+    <string name="settings_log_out">Phuma</string>
+
+    <string name="nav_home">Ikhaya</string>
+    <string name="nav_history">Umlando</string>
+    <string name="nav_insights">Imibono</string>
+    <string name="nav_settings">Izilungiselelo</string>
+</resources>

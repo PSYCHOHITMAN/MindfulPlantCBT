@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Exact tokens from the Figma Make prototype (Prototype_design_creation.zip) -->
+    <color name="bg_screen">#0A1A18</color>
+    <color name="bg_card">#162E2A</color>
+    <color name="bg_card_soft">#0F2421</color>
+    <color name="bg_card_hover">#1C3835</color>
+    <color name="divider">#1F3C38</color>
+
+    <color name="accent_mint">#2D9D8F</color>
+    <color name="accent_mint_dim">#6ECFC8</color>
+    <color name="accent_mint_soft_bg">#262D9D8F</color>
+    <color name="accent_amber">#E8A550</color>
+    <color name="accent_amber_soft_bg">#2A2210</color>
+    <color name="accent_success">#4DBB8A</color>
+    <color name="accent_success_soft_bg">#1A4DBB8A</color>
+
+    <color name="text_primary">#EBE6DD</color>
+    <color name="text_secondary">#7A9E99</color>
+    <color name="text_muted">#527069</color>
+
+    <color name="brand_dark">#0A1A18</color>
+    <color name="brand_accent">#2D9D8F</color>
+    <color name="brand_light">#162E2A</color>
+    <color name="white">#FFFFFF</color>
+    <color name="error">#E07070</color>
+</resources>

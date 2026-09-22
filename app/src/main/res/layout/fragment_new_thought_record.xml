@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_screen"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_md"
+            android:text="@string/record_title"
+            android:textAppearance="@style/TextAppearance.MPCBT.Headline" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/record_situation_hint"
+            android:textAppearance="@style/TextAppearance.MPCBT.SectionLabel" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MPCBT.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:hint="@string/record_situation_hint">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/situationInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:minLines="2"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:text="@string/record_thought_hint"
+            android:textAppearance="@style/TextAppearance.MPCBT.SectionLabel" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MPCBT.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:hint="@string/record_thought_hint">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/thoughtInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:minLines="2"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:text="@string/record_distortion_hint"
+            android:textAppearance="@style/TextAppearance.MPCBT.SectionLabel" />
+
+        <Spinner
+            android:id="@+id/distortionSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:background="@drawable/bg_card_soft"
+            android:padding="@dimen/spacing_sm"
+            android:popupBackground="@color/bg_card" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:text="@string/record_reframe_hint"
+            android:textAppearance="@style/TextAppearance.MPCBT.SectionLabel" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MPCBT.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:hint="@string/record_reframe_hint">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reframeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:minLines="2"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:text="@string/record_mood_before_label"
+            android:textAppearance="@style/TextAppearance.MPCBT.SectionLabel" />
+
+        <RadioGroup
+            android:id="@+id/moodBeforeGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_card_soft"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <RadioButton
+                android:id="@+id/moodBefore1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/accent_mint"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@color/text_primary" />
+            <RadioButton
+                android:id="@+id/moodBefore2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/accent_mint"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="@color/text_primary" />
+            <RadioButton
+                android:id="@+id/moodBefore3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/accent_mint"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="@color/text_primary" />
+            <RadioButton
+                android:id="@+id/moodBefore4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/accent_mint"
+                android:gravity="center"
+                android:text="4"
+                android:textColor="@color/text_primary" />
+            <RadioButton
+                android:id="@+id/moodBefore5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/accent_mint"
+                android:gravity="center"
+                android:text="5"
+                android:textColor="@color/text_primary" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:text="@string/record_mood_after_label"
+            android:textAppearance="@style/TextAppearance.MPCBT.SectionLabel" />
+
+        <RadioGroup
+            android:id="@+id/moodAfterGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:background="@drawable/bg_card_soft"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <RadioButton
+                android:id="@+id/mood1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/accent_mint"
+                android:text="1" />
+            <RadioButton
+                android:id="@+id/mood2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/accent_mint"
+                android:text="2" />
+            <RadioButton
+                android:id="@+id/mood3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/accent_mint"
+                android:text="3" />
+            <RadioButton
+                android:id="@+id/mood4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/accent_mint"
+                android:text="4" />
+            <RadioButton
+                android:id="@+id/mood5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/accent_mint"
+                android:text="5" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:textColor="@color/error"
+            android:visibility="gone"
+            tools:text="Please fill in all fields." />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveButton"
+            style="@style/Widget.MPCBT.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_lg"
+            android:layout_marginBottom="@dimen/spacing_lg"
+            android:text="@string/record_save_button" />
+
+    </LinearLayout>
+</ScrollView>

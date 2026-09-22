@@ -1,0 +1,21 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+**/build
+*.log
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Firebase - contains project keys. Many teams do commit this for mobile
+# apps since it isn't a true secret, but it's excluded here by default.
+# Remove this line if your lecturer/rubric expects it committed.
+app/google-services.json
