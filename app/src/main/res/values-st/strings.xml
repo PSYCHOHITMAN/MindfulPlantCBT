@@ -127,4 +127,10 @@
     <string name="err_google_failed">Ho kena ka Google ho hlolehile. Ka kopo, leka hape.</string>
     <string name="err_google_failed_code">Ho kena ka Google ho hlolehile (%1$d). Ka kopo, leka hape.</string>
     <string name="err_not_logged_in">Ha o a kena.</string>
+    <string name="settings_change_photo">Fetola setshwantsho</string>
+    <string name="settings_remove_photo">Tlosa setshwantsho</string>
+    <string name="photo_updated">Setshwantsho sa profaele se ntlafaditswe.</string>
+    <string name="photo_saved_offline">Setshwantsho se bolokilwe ho founu ena. Se tla kenngwa ha o khutlela inthaneteng.</string>
+    <string name="photo_invalid">Ha re a kgona ho sebedisa setshwantsho seo. Ka kopo, kgetha se seng.</string>
+    <string name="photo_removed">Setshwantsho sa profaele se tlositswe.</string>
 </resources>

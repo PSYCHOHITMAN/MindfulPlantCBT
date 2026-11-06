@@ -11,19 +11,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
 import com.mindfulplant.cbt.MindfulPlantApp
 import com.mindfulplant.cbt.R
+import com.mindfulplant.cbt.data.repository.ProfilePhotoRepository
 import com.mindfulplant.cbt.databinding.FragmentSettingsBinding
+import com.mindfulplant.cbt.util.AvatarUtil
 import com.mindfulplant.cbt.util.ReminderPrefs
 import com.mindfulplant.cbt.util.ReminderScheduler
 import com.mindfulplant.cbt.util.SessionManager
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 /**
@@ -40,6 +47,14 @@ class SettingsFragment : Fragment() {
 
     private lateinit var sessionManager: SessionManager
     private lateinit var reminderPrefs: ReminderPrefs
+    private lateinit var photoRepository: ProfilePhotoRepository
+    private var currentInitials = "MP"
+
+    // The system photo picker needs no storage permission.
+    private val pickPhoto =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) savePhoto(uri)
+        }
 
     private val viewModel: SettingsViewModel by viewModels {
         viewModelFactory {
@@ -58,6 +73,7 @@ class SettingsFragment : Fragment() {
     ): View {
         sessionManager = SessionManager(requireActivity().application)
         reminderPrefs = ReminderPrefs(requireActivity().application)
+        photoRepository = ProfilePhotoRepository(requireContext())
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -90,19 +106,29 @@ class SettingsFragment : Fragment() {
             if (user != null) {
                 binding.root.findViewById<TextView>(R.id.profileNameText)?.text = user.fullName
                 binding.root.findViewById<TextView>(R.id.profileEmailText)?.text = user.email
-                binding.root.findViewById<TextView>(R.id.profileInitials)?.text = user.fullName
+                currentInitials = user.fullName
                     .trim()
                     .split(Regex("\\s+"))
                     .filter { it.isNotBlank() }
                     .take(2)
                     .joinToString("") { it.first().uppercase() }
                     .ifBlank { "MP" }
+                refreshAvatar()
                 val index = SUPPORTED_LANGUAGES.indexOfFirst { it.second == user.preferredLanguage }
                 if (index >= 0 && binding.languageSpinner.selectedItemPosition != index) {
                     isApplyingSavedSelection = true
                     binding.languageSpinner.setSelection(index)
                 }
             }
+        }
+
+        // Profile photo (blob storage): show the cached photo, then sync with the server.
+        binding.profileInitials.setOnClickListener { openPhotoPicker() }
+        binding.changePhotoButton.setOnClickListener { openPhotoPicker() }
+        binding.removePhotoButton.setOnClickListener { removePhoto() }
+        refreshAvatar()
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (photoRepository.sync()) refreshAvatar()
         }
 
         binding.reminderTimeButton.text = reminderPrefs.formatted()
@@ -134,9 +160,51 @@ class SettingsFragment : Fragment() {
         }
 
         binding.logoutButton.setOnClickListener {
+            photoRepository.clearLocal()
             sessionManager.clear()
             com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
             findNavController().navigate(R.id.action_settings_to_login)
+        }
+    }
+
+    private fun openPhotoPicker() {
+        pickPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun refreshAvatar() {
+        val photo = photoRepository.loadLocal()
+        AvatarUtil.apply(binding.profileInitials, photo, currentInitials)
+        binding.removePhotoButton.visibility = if (photo != null) View.VISIBLE else View.GONE
+    }
+
+    private fun setPhotoBusy(busy: Boolean) {
+        binding.changePhotoButton.isEnabled = !busy
+        binding.removePhotoButton.isEnabled = !busy
+        binding.profileInitials.isEnabled = !busy
+    }
+
+    private fun savePhoto(uri: Uri) {
+        setPhotoBusy(true)
+        viewLifecycleOwner.lifecycleScope.launch {
+            val result = photoRepository.setPhoto(uri)
+            refreshAvatar()
+            setPhotoBusy(false)
+            val message = when (result) {
+                is ProfilePhotoRepository.SetResult.Uploaded -> R.string.photo_updated
+                is ProfilePhotoRepository.SetResult.SavedOffline -> R.string.photo_saved_offline
+                is ProfilePhotoRepository.SetResult.Invalid -> R.string.photo_invalid
+            }
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun removePhoto() {
+        setPhotoBusy(true)
+        viewLifecycleOwner.lifecycleScope.launch {
+            photoRepository.remove()
+            refreshAvatar()
+            setPhotoBusy(false)
+            Toast.makeText(requireContext(), R.string.photo_removed, Toast.LENGTH_SHORT).show()
         }
     }
 

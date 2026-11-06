@@ -127,4 +127,10 @@
     <string name="err_google_failed">Ukungena ngeGoogle kuhlulekile. Sicela uzame futhi.</string>
     <string name="err_google_failed_code">Ukungena ngeGoogle kuhlulekile (%1$d). Sicela uzame futhi.</string>
     <string name="err_not_logged_in">Awungenile.</string>
+    <string name="settings_change_photo">Shintsha isithombe</string>
+    <string name="settings_remove_photo">Susa isithombe</string>
+    <string name="photo_updated">Isithombe sephrofayela sivuselelwe.</string>
+    <string name="photo_saved_offline">Isithombe silondolozwe kule foni. Sizothunyelwa uma uphinde uxhumeke ku-inthanethi.</string>
+    <string name="photo_invalid">Asikwazanga ukusebenzisa leso sithombe. Sicela ukhethe esinye.</string>
+    <string name="photo_removed">Isithombe sephrofayela sisusiwe.</string>
 </resources>

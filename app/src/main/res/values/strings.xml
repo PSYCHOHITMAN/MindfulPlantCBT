@@ -128,4 +128,10 @@
     <string name="err_google_failed">Google sign-in failed. Please try again.</string>
     <string name="err_google_failed_code">Google sign-in failed (%1$d). Please try again.</string>
     <string name="err_not_logged_in">Not logged in.</string>
+    <string name="settings_change_photo">Change photo</string>
+    <string name="settings_remove_photo">Remove photo</string>
+    <string name="photo_updated">Profile photo updated.</string>
+    <string name="photo_saved_offline">Photo saved on this device. It will upload when you\'re back online.</string>
+    <string name="photo_invalid">Couldn\'t use that image. Please pick a different photo.</string>
+    <string name="photo_removed">Profile photo removed.</string>
 </resources>

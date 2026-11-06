@@ -15,9 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mindfulplant.cbt.MindfulPlantApp
 import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.data.remote.RetrofitClient
+import com.mindfulplant.cbt.data.repository.ProfilePhotoRepository
 import com.mindfulplant.cbt.data.repository.RecordRepository
 import com.mindfulplant.cbt.databinding.FragmentHomeBinding
 import com.mindfulplant.cbt.ui.history.ThoughtRecordAdapter
+import com.mindfulplant.cbt.util.AvatarUtil
 import com.mindfulplant.cbt.util.ReminderPrefs
 import com.mindfulplant.cbt.util.SessionManager
 import kotlinx.coroutines.launch
@@ -67,7 +69,7 @@ class HomeFragment : Fragment() {
                 ?: getString(R.string.home_greeting)
             binding.greetingText.text = name
             val profileInitials = binding.root.findViewById<TextView>(R.id.profileInitials)
-            profileInitials?.text = user?.fullName
+            val initials = user?.fullName
                 ?.trim()
                 ?.split(Regex("\\s+"))
                 ?.filter { it.isNotBlank() }
@@ -75,6 +77,14 @@ class HomeFragment : Fragment() {
                 ?.joinToString("") { it.first().uppercase() }
                 ?.takeIf { it.isNotBlank() }
                 ?: "MP"
+            if (profileInitials != null) {
+                // Show the cached photo straight away, then check the server for a newer one.
+                val photoRepository = ProfilePhotoRepository(requireContext())
+                AvatarUtil.apply(profileInitials, photoRepository.loadLocal(), initials)
+                if (photoRepository.sync()) {
+                    AvatarUtil.apply(profileInitials, photoRepository.loadLocal(), initials)
+                }
+            }
         }
 
         binding.recentEntriesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
