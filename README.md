@@ -2,8 +2,6 @@
 
 A CBT thought-reframing and mood-journal Android app, built for OPSC6312 (Part 2 of the
 Portfolio of Evidence). Guides a user through a structured cognitive-behavioural-therapy
-exercise — situation, automatic thought, cognitive distortion, balanced reframe, mood
-before/after — and tracks mood trends over time.
 
 **Student:** Percy Dube (ST10383359) · **Group member:** Abonga Magugu Nkosi (ST10298002)
 
@@ -18,13 +16,10 @@ before/after — and tracks mood trends over time.
       configured (SHA-1 fingerprint + re-download of `google-services.json`)
 - [x] Settings: change display language, reminder time, and password
 - [x] REST API connected to a database (Node.js/Express + MongoDB Atlas)
-- [x] Offline-first with manual sync — records save to RoomDB first and sync on demand
 - [x] RoomDB/SQLite for local persistence
 - [ ] Real-time local push notifications at the chosen reminder time — **not yet implemented**;
       the time is saved and the manifest permissions are in place, but nothing schedules the
       actual `AlarmManager`/`WorkManager` alarm yet
-- [x] Multi-language support (English, isiZulu, Sesotho) — mostly complete; a handful of
-      recently-added strings still need isiZulu/Sesotho translations
 
 ### Additional / innovative features
 - [x] Day-streak counter
@@ -32,7 +27,6 @@ before/after — and tracks mood trends over time.
 - [x] Guided cognitive-distortion picker with a plain-language description for each type
 - [x] Rule-based Insights screen: trend detection, mood-lift stat, most-logged distortion with
       a CBT-style tip, best reframe of the week, milestone badges
-- [ ] Data export (JSON/CSV) — not yet implemented
 
 ## Tech stack
 
@@ -85,9 +79,5 @@ See that repo's own README for deployment steps (it's set up to deploy on Render
 
 ## Known limitations
 - Google Sign-In and local push notifications are UI-ready but not functionally wired up yet
-  (see checklist above) — planned for the next iteration.
 - Sync is one-way, on-demand ("Sync now"), not continuous background sync, and assumes one
-  device per user (last-write-wins, no conflict merging) — this was a deliberate scope
   decision from the Part 1 planning document, not an oversight.
-- A handful of UI strings added late in development haven't been translated into isiZulu or
-  Sesotho yet.
