@@ -67,7 +67,7 @@ class RegisterFragment : Fragment() {
                 if (state is RegisterUiState.Error) View.VISIBLE else View.GONE
 
             when (state) {
-                is RegisterUiState.Error -> binding.errorText.text = state.message
+                is RegisterUiState.Error -> binding.errorText.text = state.message.asString(requireContext())
                 is RegisterUiState.Success -> {
                     findNavController().navigate(R.id.action_register_to_home)
                 }

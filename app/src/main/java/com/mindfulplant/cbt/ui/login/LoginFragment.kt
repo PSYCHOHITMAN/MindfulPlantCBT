@@ -21,6 +21,7 @@ import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.data.remote.RetrofitClient
 import com.mindfulplant.cbt.data.repository.AuthRepository
 import com.mindfulplant.cbt.databinding.FragmentLoginBinding
+import com.mindfulplant.cbt.util.uiText
 import com.mindfulplant.cbt.util.SessionManager
 
 /**
@@ -57,7 +58,7 @@ class LoginFragment : Fragment() {
                     .getResult(ApiException::class.java)
                 val idToken = account.idToken
                 if (idToken == null) {
-                    viewModel.onSsoError("Google sign-in failed. Please try again.")
+                    viewModel.onSsoError(uiText(R.string.err_google_failed))
                 } else {
                     // Sign in to Firebase Authentication (the SSO provider), then
                     // exchange the same Google token for our own API session.
@@ -68,7 +69,7 @@ class LoginFragment : Fragment() {
                                 viewModel.ssoLogin(idToken)
                             } else {
                                 Log.e("LoginFragment", "Firebase sign-in failed", task.exception)
-                                viewModel.onSsoError("Google sign-in failed. Please try again.")
+                                viewModel.onSsoError(uiText(R.string.err_google_failed))
                             }
                         }
                 }
@@ -76,7 +77,7 @@ class LoginFragment : Fragment() {
                 // 12501 = the user closed the account picker; not an error worth showing.
                 if (e.statusCode != 12501) {
                     Log.e("LoginFragment", "Google sign-in failed: ${e.statusCode}", e)
-                    viewModel.onSsoError("Google sign-in failed. Please try again.")
+                    viewModel.onSsoError(uiText(R.string.err_google_failed))
                 }
             }
         }
@@ -133,7 +134,7 @@ class LoginFragment : Fragment() {
                 if (state is LoginUiState.Error) View.VISIBLE else View.GONE
 
             when (state) {
-                is LoginUiState.Error -> binding.errorText.text = state.message
+                is LoginUiState.Error -> binding.errorText.text = state.message.asString(requireContext())
                 is LoginUiState.Success -> {
                     findNavController().navigate(R.id.action_login_to_home)
                 }

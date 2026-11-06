@@ -90,7 +90,7 @@ class NewThoughtRecordFragment : Fragment() {
                 if (state is SaveRecordUiState.Error) View.VISIBLE else View.GONE
 
             when (state) {
-                is SaveRecordUiState.Error -> binding.errorText.text = state.message
+                is SaveRecordUiState.Error -> binding.errorText.text = state.message.asString(requireContext())
                 is SaveRecordUiState.Saved -> {
                     findNavController().navigate(R.id.action_newThoughtRecord_to_home)
                 }

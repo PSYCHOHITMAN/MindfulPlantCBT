@@ -33,7 +33,7 @@ class ThoughtRecordAdapter : ListAdapter<ThoughtRecordEntity, ThoughtRecordAdapt
             binding.dateText.text = dateFormat.format(Date(record.createdAt))
             binding.situationText.text = record.situation
             binding.distortionChip.text = record.distortionType
-            binding.moodBeforeText.text = "Before 😐 ${record.moodBefore}/5"
+            binding.moodBeforeText.text = binding.root.context.getString(R.string.record_mood_before, record.moodBefore)
 
             val context = binding.root.context
             if (record.moodAfter >= record.moodBefore) {
@@ -41,16 +41,16 @@ class ThoughtRecordAdapter : ListAdapter<ThoughtRecordEntity, ThoughtRecordAdapt
             } else {
                 binding.moodAfterText.setTextColor(ContextCompat.getColor(context, R.color.error))
             }
-            binding.moodAfterText.text = "After 🙂 ${record.moodAfter}/5"
+            binding.moodAfterText.text = context.getString(R.string.record_mood_after, record.moodAfter)
 
             if (record.syncStatus == "pending") {
                 binding.syncStatusText.setBackgroundResource(R.drawable.bg_chip_amber_soft)
                 binding.syncStatusText.setTextColor(ContextCompat.getColor(context, R.color.accent_amber))
-                binding.syncStatusText.text = "⏳ pending"
+                binding.syncStatusText.text = context.getString(R.string.sync_pending)
             } else {
                 binding.syncStatusText.setBackgroundResource(R.drawable.bg_chip_success_soft)
                 binding.syncStatusText.setTextColor(ContextCompat.getColor(context, R.color.accent_success))
-                binding.syncStatusText.text = "✓ synced"
+                binding.syncStatusText.text = context.getString(R.string.sync_synced)
             }
         }
     }

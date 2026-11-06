@@ -5,15 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import android.util.Patterns
+import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.data.repository.AuthRepository
 import com.mindfulplant.cbt.data.repository.AuthResult
+import com.mindfulplant.cbt.util.UiText
+import com.mindfulplant.cbt.util.uiText
 import kotlinx.coroutines.launch
 
 sealed class RegisterUiState {
     object Idle : RegisterUiState()
     object Loading : RegisterUiState()
     data class Success(val userId: String) : RegisterUiState()
-    data class Error(val message: String) : RegisterUiState()
+    data class Error(val message: UiText) : RegisterUiState()
 }
 
 class RegisterViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -23,23 +26,23 @@ class RegisterViewModel(private val authRepository: AuthRepository) : ViewModel(
 
     fun register(fullName: String, email: String, password: String, confirmPassword: String) {
         if (fullName.isBlank() || email.isBlank() || password.isBlank()) {
-            _uiState.value = RegisterUiState.Error("Please fill in all fields.")
+            _uiState.value = RegisterUiState.Error(uiText(R.string.err_fill_all))
             return
         }
         if (fullName.trim().length > 120) {
-            _uiState.value = RegisterUiState.Error("Full name must be 120 characters or fewer.")
+            _uiState.value = RegisterUiState.Error(uiText(R.string.err_name_too_long))
             return
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
-            _uiState.value = RegisterUiState.Error("Please enter a valid email address.")
+            _uiState.value = RegisterUiState.Error(uiText(R.string.err_invalid_email))
             return
         }
         if (password != confirmPassword) {
-            _uiState.value = RegisterUiState.Error("Passwords do not match.")
+            _uiState.value = RegisterUiState.Error(uiText(R.string.err_passwords_mismatch))
             return
         }
         if (password.length < 8) {
-            _uiState.value = RegisterUiState.Error("Password must be at least 8 characters.")
+            _uiState.value = RegisterUiState.Error(uiText(R.string.err_password_short))
             return
         }
 

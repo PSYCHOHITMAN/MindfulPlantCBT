@@ -6,9 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.data.local.entity.ThoughtRecordEntity
 import com.mindfulplant.cbt.data.repository.RecordRepository
 import com.mindfulplant.cbt.data.repository.SyncResult
+import com.mindfulplant.cbt.util.UiText
+import com.mindfulplant.cbt.util.uiText
 import kotlinx.coroutines.launch
 
 class MoodHistoryViewModel(
@@ -25,8 +28,8 @@ class MoodHistoryViewModel(
         list.take(7).reversed().map { it.moodAfter.toFloat() }
     }
 
-    private val _syncMessage = MutableLiveData<String?>()
-    val syncMessage: LiveData<String?> = _syncMessage
+    private val _syncMessage = MutableLiveData<UiText?>()
+    val syncMessage: LiveData<UiText?> = _syncMessage
 
     fun syncNow() {
         viewModelScope.launch {
@@ -34,17 +37,16 @@ class MoodHistoryViewModel(
                 when (val result = recordRepository.syncPendingRecords(userId)) {
                     is SyncResult.Success -> _syncMessage.value = when {
                         result.syncedCount > 0 && result.failedCount > 0 ->
-                            "Synced ${result.syncedCount}; ${result.failedCount} still pending."
-                        result.syncedCount > 0 ->
-                            "Synced ${result.syncedCount} entr${if (result.syncedCount == 1) "y" else "ies"}."
-                        result.failedCount > 0 ->
-                            "Couldn't sync yet. Check your connection and try again."
-                        else -> "Everything's already up to date."
+                            uiText(R.string.sync_partial, result.syncedCount, result.failedCount)
+                        result.syncedCount == 1 -> uiText(R.string.sync_done_one)
+                        result.syncedCount > 0 -> uiText(R.string.sync_done_many, result.syncedCount)
+                        result.failedCount > 0 -> uiText(R.string.sync_failed)
+                        else -> uiText(R.string.sync_up_to_date)
                     }
                     is SyncResult.Error -> _syncMessage.value = result.message
                 }
             } catch (e: Exception) {
-                _syncMessage.value = "Couldn't sync yet. Check your connection and try again."
+                _syncMessage.value = uiText(R.string.sync_failed)
             }
         }
     }

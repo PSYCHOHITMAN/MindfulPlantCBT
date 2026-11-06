@@ -62,7 +62,7 @@ class MoodTrendChartView @JvmOverloads constructor(
 
         if (values.size < 2) {
             canvas.drawText(
-                if (values.isEmpty()) "No entries yet" else "Log one more entry to see a trend",
+                context.getString(if (values.isEmpty()) R.string.chart_no_entries else R.string.chart_one_more),
                 width / 2f,
                 height / 2f,
                 emptyPaint

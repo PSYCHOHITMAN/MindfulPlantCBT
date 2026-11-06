@@ -5,15 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import android.util.Patterns
+import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.data.repository.AuthRepository
 import com.mindfulplant.cbt.data.repository.AuthResult
+import com.mindfulplant.cbt.util.UiText
+import com.mindfulplant.cbt.util.uiText
 import kotlinx.coroutines.launch
 
 sealed class LoginUiState {
     object Idle : LoginUiState()
     object Loading : LoginUiState()
     data class Success(val userId: String) : LoginUiState()
-    data class Error(val message: String) : LoginUiState()
+    data class Error(val message: UiText) : LoginUiState()
 }
 
 class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -23,11 +26,11 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     fun login(email: String, password: String) {
         if (email.isBlank() || password.isBlank()) {
-            _uiState.value = LoginUiState.Error("Please enter your email and password.")
+            _uiState.value = LoginUiState.Error(uiText(R.string.err_login_fields))
             return
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
-            _uiState.value = LoginUiState.Error("Please enter a valid email address.")
+            _uiState.value = LoginUiState.Error(uiText(R.string.err_invalid_email))
             return
         }
 
@@ -51,7 +54,7 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
-    fun onSsoError(message: String) {
+    fun onSsoError(message: UiText) {
         _uiState.value = LoginUiState.Error(message)
     }
 }

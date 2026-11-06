@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mindfulplant.cbt.MindfulPlantApp
+import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.data.remote.RetrofitClient
 import com.mindfulplant.cbt.data.repository.RecordRepository
 import com.mindfulplant.cbt.databinding.FragmentMoodHistoryBinding
@@ -59,8 +60,9 @@ class MoodHistoryFragment : Fragment() {
         viewModel.records.observe(viewLifecycleOwner) { records ->
             adapter.submitList(records)
             binding.emptyStateText.visibility = if (records.isEmpty()) View.VISIBLE else View.GONE
-            val countLabel = if (records.size == 1) "1 record" else "${records.size} records"
-            binding.recordCountText.text = "Your last 7 days · $countLabel"
+            val countLabel = if (records.size == 1) getString(R.string.history_record_count_one)
+                else getString(R.string.history_record_count_other, records.size)
+            binding.recordCountText.text = getString(R.string.history_last_7_days, countLabel)
         }
 
         viewModel.chartValues.observe(viewLifecycleOwner) { values ->
@@ -70,7 +72,8 @@ class MoodHistoryFragment : Fragment() {
         viewModel.pendingCount.observe(viewLifecycleOwner) { count ->
             if (count > 0) {
                 binding.pendingBanner.visibility = View.VISIBLE
-                binding.pendingCountText.text = if (count == 1) "1 entry pending sync" else "$count entries pending sync"
+                binding.pendingCountText.text = if (count == 1) getString(R.string.history_pending_one)
+                    else getString(R.string.history_pending_many, count)
             } else {
                 binding.pendingBanner.visibility = View.GONE
             }
@@ -78,7 +81,7 @@ class MoodHistoryFragment : Fragment() {
 
         viewModel.syncMessage.observe(viewLifecycleOwner) { message ->
             if (message != null) {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), message.asString(requireContext()), Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mindfulplant.cbt.data.repository.RecordRepository
+import com.mindfulplant.cbt.R
+import com.mindfulplant.cbt.util.UiText
+import com.mindfulplant.cbt.util.uiText
 import kotlinx.coroutines.launch
 
 /**
@@ -26,7 +29,7 @@ val COGNITIVE_DISTORTIONS = listOf(
 sealed class SaveRecordUiState {
     object Idle : SaveRecordUiState()
     object Saved : SaveRecordUiState()
-    data class Error(val message: String) : SaveRecordUiState()
+    data class Error(val message: UiText) : SaveRecordUiState()
 }
 
 class NewThoughtRecordViewModel(
@@ -46,17 +49,17 @@ class NewThoughtRecordViewModel(
         moodAfter: Int
     ) {
         if (userId.isBlank()) {
-            _uiState.value = SaveRecordUiState.Error("Your session has expired. Please log in again.")
+            _uiState.value = SaveRecordUiState.Error(uiText(R.string.err_session_expired))
             return
         }
         if (situation.isBlank() || automaticThought.isBlank() ||
             distortionType.isBlank() || balancedReframe.isBlank()
         ) {
-            _uiState.value = SaveRecordUiState.Error("Please fill in all fields before saving.")
+            _uiState.value = SaveRecordUiState.Error(uiText(R.string.err_fill_all_before_saving))
             return
         }
         if (moodBefore !in 1..5 || moodAfter !in 1..5) {
-            _uiState.value = SaveRecordUiState.Error("Choose both before and after mood scores.")
+            _uiState.value = SaveRecordUiState.Error(uiText(R.string.err_choose_moods))
             return
         }
 
@@ -73,9 +76,7 @@ class NewThoughtRecordViewModel(
                 )
                 _uiState.value = SaveRecordUiState.Saved
             } catch (e: Exception) {
-                _uiState.value = SaveRecordUiState.Error(
-                    "Couldn't save this entry. Please try again."
-                )
+                _uiState.value = SaveRecordUiState.Error(uiText(R.string.err_save_failed))
             }
         }
     }

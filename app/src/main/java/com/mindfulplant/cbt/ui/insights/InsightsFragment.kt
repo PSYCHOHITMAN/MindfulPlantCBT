@@ -9,7 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mindfulplant.cbt.MindfulPlantApp
+import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.databinding.FragmentInsightsBinding
+import com.mindfulplant.cbt.domain.InsightMessage
 import com.mindfulplant.cbt.domain.Trend
 import com.mindfulplant.cbt.util.SessionManager
 
@@ -50,13 +52,15 @@ class InsightsFragment : Fragment() {
 
         viewModel.insights.observe(viewLifecycleOwner) { result ->
             binding.trendLabel.text = when (result.trend) {
-                Trend.UP -> "↗ Trending upward"
-                Trend.DOWN -> "↘ Trending downward"
-                Trend.STEADY -> "→ Steady"
-                Trend.NOT_ENOUGH_DATA -> "Not enough entries yet"
+                Trend.UP -> getString(R.string.insights_trend_up)
+                Trend.DOWN -> getString(R.string.insights_trend_down)
+                Trend.STEADY -> getString(R.string.insights_trend_steady)
+                Trend.NOT_ENOUGH_DATA -> getString(R.string.insights_trend_not_enough)
             }
-            binding.messageText.text = result.message
-            binding.subtitleText.text = "Based on your last 7 days · ${result.analysedCount} record${if (result.analysedCount == 1) "" else "s"}"
+            binding.messageText.text = getString(messageRes(result.message))
+            val countLabel = if (result.analysedCount == 1) getString(R.string.history_record_count_one)
+                else getString(R.string.history_record_count_other, result.analysedCount)
+            binding.subtitleText.text = getString(R.string.insights_subtitle, countLabel)
 
             binding.avgMoodValue.text = result.avgMoodAfter?.let { String.format("%.1f", it) } ?: "–"
             binding.moodLiftValue.text = result.avgMoodLift?.let {
@@ -65,17 +69,39 @@ class InsightsFragment : Fragment() {
             binding.streakStatValue.text = result.streak.toString()
 
             binding.distortionText.text = if (result.mostLoggedDistortion != null) {
-                "${result.mostLoggedDistortion} (${result.mostLoggedDistortionCount}x this week)"
+                getString(R.string.insights_distortion_count, result.mostLoggedDistortion, result.mostLoggedDistortionCount)
             } else {
-                "Log a few more thought records to see a pattern here."
+                getString(R.string.insights_no_pattern)
             }
-            if (result.distortionTip != null) {
+            val tipRes = tipRes(result.mostLoggedDistortion)
+            if (tipRes != null) {
                 binding.distortionTipText.visibility = View.VISIBLE
-                binding.distortionTipText.text = result.distortionTip
+                binding.distortionTipText.text = getString(tipRes)
             } else {
                 binding.distortionTipText.visibility = View.GONE
             }
         }
+    }
+
+    private fun messageRes(message: InsightMessage): Int = when (message) {
+        InsightMessage.NOT_ENOUGH_DATA -> R.string.insights_msg_not_enough
+        InsightMessage.BUILDING_HABIT -> R.string.insights_msg_habit
+        InsightMessage.IMPROVED -> R.string.insights_msg_improved
+        InsightMessage.DECLINE -> R.string.insights_msg_decline
+        InsightMessage.PERSISTENT_DECLINE -> R.string.insights_msg_persistent_decline
+        InsightMessage.STEADY -> R.string.insights_msg_steady
+    }
+
+    /** Distortion names are stored in English, so match on them to pick the translated tip. */
+    private fun tipRes(distortion: String?): Int? = when (distortion) {
+        "Catastrophising" -> R.string.tip_catastrophising
+        "All-or-nothing thinking" -> R.string.tip_all_or_nothing
+        "Mind-reading" -> R.string.tip_mind_reading
+        "Overgeneralising" -> R.string.tip_overgeneralising
+        "Emotional reasoning" -> R.string.tip_emotional_reasoning
+        "Should statements" -> R.string.tip_should_statements
+        "Personalising" -> R.string.tip_personalising
+        else -> null
     }
 
     override fun onDestroyView() {

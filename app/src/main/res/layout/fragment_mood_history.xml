@@ -105,7 +105,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="24dp"
-        android:text="No entries yet."
+        android:text="@string/history_empty"
         android:textColor="@color/text_secondary"
         android:visibility="gone" />
 
