@@ -3,6 +3,7 @@ package com.mindfulplant.cbt.data.repository
 import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.util.UiText
 import com.mindfulplant.cbt.util.uiText
+import kotlinx.coroutines.CancellationException
 import com.mindfulplant.cbt.data.local.dao.ThoughtRecordDao
 import com.mindfulplant.cbt.data.local.entity.ThoughtRecordEntity
 import com.mindfulplant.cbt.data.remote.ApiService
@@ -19,14 +20,14 @@ sealed class SyncResult {
 /**
  * Everything to do with reading/writing thought records.
  *
- * This implements the simplified, one-way "Sync now" approach from the
- * Planning and Design document (Section 8.1): records are ALWAYS saved to
- * Room first (so the app works fully offline), marked "pending", and only
- * pushed to the API when syncPendingRecords() is explicitly called - either
- * by the user tapping "Sync now", or automatically when the app detects it
- * has a connection. There is no conflict-merging logic, by design: the
- * project assumes a single device per user, so a straightforward
- * last-write-wins is enough.
+ * Offline-first sync (Planning and Design, Section 8.1): records are ALWAYS
+ * saved to Room first (so the app works fully offline) and marked "pending".
+ * syncPendingRecords() pushes them to the API. That runs automatically through
+ * SyncWorker as soon as the phone is back online, or when the user taps
+ * "Sync now". pullRecords() downloads records the phone doesn't have yet, so a
+ * reinstall or a second device shows the user's history. There is no
+ * conflict-merging logic, by design: records are never edited after saving,
+ * and the API upserts by recordId, so repeating a sync is always safe.
  */
 class RecordRepository(
     private val apiService: ApiService,
@@ -96,6 +97,39 @@ class RecordRepository(
         }
         return SyncResult.Success(syncedCount, failedCount)
     }
+
+    /**
+     * Downloads the user's records from the API and adds the ones this phone
+     * doesn't have. Records already on the phone (including pending ones) are
+     * left untouched. Returns false if the server couldn't be reached.
+     */
+    suspend fun pullRecords(userId: String): Boolean {
+        val token = sessionManager.authToken ?: return false
+        return try {
+            val response = apiService.getRecords("Bearer $token")
+            if (!response.isSuccessful) return false
+            val missing = response.body().orEmpty().map { it.toEntity(userId) }
+            recordDao.insertAllIfAbsent(missing)
+            true
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun ThoughtRecordDto.toEntity(userId: String) = ThoughtRecordEntity(
+        recordId = recordId,
+        userId = userId,
+        situation = situation,
+        automaticThought = automaticThought,
+        distortionType = distortionType,
+        balancedReframe = balancedReframe,
+        moodBefore = moodBefore,
+        moodAfter = moodAfter,
+        createdAt = createdAt,
+        syncStatus = "synced"
+    )
 
     private fun ThoughtRecordEntity.toDto() = ThoughtRecordDto(
         recordId = recordId,

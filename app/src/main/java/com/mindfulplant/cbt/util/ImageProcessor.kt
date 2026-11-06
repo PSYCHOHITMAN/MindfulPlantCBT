@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.net.Uri
+import android.util.Log
 import androidx.exifinterface.media.ExifInterface
 import java.io.ByteArrayOutputStream
 import kotlin.math.min
@@ -23,14 +24,22 @@ object ImageProcessor {
 
     const val MAX_SIZE = 512
     private const val JPEG_QUALITY = 85
+    private const val TAG = "ImageProcessor"
 
     /** Returns JPEG bytes, or null if the picked file can't be read as an image. */
     fun toAvatarJpeg(context: Context, uri: Uri): ByteArray? = runCatching {
         val resolver = context.contentResolver
 
+        // Read only the image size. With inJustDecodeBounds the decoder returns null
+        // on purpose, so we must not treat that null as a failure.
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
-            ?: return null
+        val opened = resolver.openInputStream(uri)?.use {
+            BitmapFactory.decodeStream(it, null, bounds)
+            true
+        } ?: run {
+            Log.e(TAG, "Could not open $uri")
+            return null
+        }
         if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
 
         var sample = 1
@@ -75,5 +84,5 @@ object ImageProcessor {
             flattened.compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY, out)
             out.toByteArray()
         }
-    }.getOrNull()
+    }.onFailure { Log.e(TAG, "Could not process the picked image", it) }.getOrNull()
 }

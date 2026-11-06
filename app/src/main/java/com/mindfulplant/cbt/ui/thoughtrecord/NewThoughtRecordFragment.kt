@@ -15,6 +15,7 @@ import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.data.remote.RetrofitClient
 import com.mindfulplant.cbt.data.repository.RecordRepository
 import com.mindfulplant.cbt.databinding.FragmentNewThoughtRecordBinding
+import com.mindfulplant.cbt.sync.SyncScheduler
 import com.mindfulplant.cbt.util.SessionManager
 
 class NewThoughtRecordFragment : Fragment() {
@@ -92,6 +93,8 @@ class NewThoughtRecordFragment : Fragment() {
             when (state) {
                 is SaveRecordUiState.Error -> binding.errorText.text = state.message.asString(requireContext())
                 is SaveRecordUiState.Saved -> {
+                    // Queue the upload; it runs now if online, or the moment the phone reconnects.
+                    SyncScheduler.enqueue(requireContext())
                     findNavController().navigate(R.id.action_newThoughtRecord_to_home)
                 }
                 else -> Unit

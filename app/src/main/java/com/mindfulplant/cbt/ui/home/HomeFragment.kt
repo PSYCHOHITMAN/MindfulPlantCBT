@@ -18,6 +18,7 @@ import com.mindfulplant.cbt.data.remote.RetrofitClient
 import com.mindfulplant.cbt.data.repository.ProfilePhotoRepository
 import com.mindfulplant.cbt.data.repository.RecordRepository
 import com.mindfulplant.cbt.databinding.FragmentHomeBinding
+import com.mindfulplant.cbt.sync.SyncScheduler
 import com.mindfulplant.cbt.ui.history.ThoughtRecordAdapter
 import com.mindfulplant.cbt.util.AvatarUtil
 import com.mindfulplant.cbt.util.ReminderPrefs
@@ -60,6 +61,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Home is where login lands and where the app opens: make sure pending records
+        // are uploaded and a fresh install pulls the user's history.
+        SyncScheduler.enqueue(requireContext())
 
         viewLifecycleOwner.lifecycleScope.launch {
             val app = requireActivity().application as MindfulPlantApp
