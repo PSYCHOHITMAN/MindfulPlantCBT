@@ -3,7 +3,7 @@
 A CBT thought-reframing and mood-journal Android app, built for OPSC6312 (Part 2 of the
 Portfolio of Evidence). Guides a user through a structured cognitive-behavioural-therapy
 
-**Student:** Percy Dube (ST10383359) · **Group member:** Abonga Magugu Nkosi (ST10298002)
+**Group member:** Percy Dube (ST10383359) · **Group member:** Abonga Magugu Nkosi (ST10298002)
 
 ---
 
