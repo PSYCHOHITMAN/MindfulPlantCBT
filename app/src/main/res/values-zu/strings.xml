@@ -57,4 +57,8 @@
     <string name="nav_history">Umlando</string>
     <string name="nav_insights">Imibono</string>
     <string name="nav_settings">Izilungiselelo</string>
+    <string name="notification_channel_name">Isikhumbuzi sansuku zonke</string>
+    <string name="notification_channel_description">Izikhumbuzo zokuloga isimo sakho nemicabango</string>
+    <string name="notification_title">Isikhathi sokuhlola</string>
+    <string name="notification_text">Thatha umzuzu uloge isimo sakho futhi uguqule umcabango.</string>
 </resources>

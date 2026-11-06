@@ -18,6 +18,9 @@ interface ApiService {
     @POST("login")
     suspend fun login(@Body request: LoginRequest): Response<AuthResponse>
 
+    @POST("sso")
+    suspend fun sso(@Body request: SsoRequest): Response<AuthResponse>
+
     @POST("records")
     suspend fun saveRecord(
         @Header("Authorization") bearerToken: String,

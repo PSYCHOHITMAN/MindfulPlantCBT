@@ -1,18 +1,22 @@
 package com.mindfulplant.cbt.data.repository
 
+import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.data.local.dao.UserDao
 import com.mindfulplant.cbt.data.local.entity.UserEntity
 import com.mindfulplant.cbt.data.remote.ApiService
 import com.mindfulplant.cbt.data.remote.dto.LoginRequest
 import com.mindfulplant.cbt.data.remote.dto.RegisterRequest
+import com.mindfulplant.cbt.data.remote.dto.SsoRequest
 import com.mindfulplant.cbt.util.SessionManager
+import com.mindfulplant.cbt.util.UiText
+import com.mindfulplant.cbt.util.uiText
 import org.json.JSONObject
 import retrofit2.Response
 
 /** Simple result wrapper so the UI can show a clear success/error message. */
 sealed class AuthResult {
     data class Success(val userId: String) : AuthResult()
-    data class Error(val message: String) : AuthResult()
+    data class Error(val message: UiText) : AuthResult()
 }
 
 /**
@@ -56,11 +60,11 @@ class AuthRepository(
             } else {
                 AuthResult.Error(
                     responseMessage(response)
-                        ?: "Registration failed (${response.code()}). Please try again."
+                        ?: uiText(R.string.err_register_failed, response.code())
                 )
             }
         } catch (e: Exception) {
-            AuthResult.Error("Couldn't reach the server. Check your connection.")
+            AuthResult.Error(uiText(R.string.err_no_connection))
         }
     }
 
@@ -81,18 +85,46 @@ class AuthRepository(
                 sessionManager.authToken = body.token
                 AuthResult.Success(body.userId)
             } else {
-                AuthResult.Error(responseMessage(response) ?: "Incorrect email or password.")
+                AuthResult.Error(responseMessage(response) ?: uiText(R.string.err_login_incorrect))
             }
         } catch (e: Exception) {
-            AuthResult.Error("Couldn't reach the server. Check your connection.")
+            AuthResult.Error(uiText(R.string.err_no_connection))
         }
     }
 
-    private fun responseMessage(response: Response<*>): String? {
+    /** Exchanges a Google ID token for our own API session (JWT). */
+    suspend fun ssoLogin(idToken: String): AuthResult {
+        return try {
+            val response = apiService.sso(SsoRequest(idToken))
+            if (response.isSuccessful && response.body() != null) {
+                val body = response.body()!!
+                userDao.upsert(
+                    UserEntity(
+                        userId = body.userId,
+                        fullName = body.fullName,
+                        email = body.email,
+                        ssoProvider = "google"
+                    )
+                )
+                sessionManager.userId = body.userId
+                sessionManager.authToken = body.token
+                AuthResult.Success(body.userId)
+            } else {
+                AuthResult.Error(
+                    responseMessage(response)
+                        ?: uiText(R.string.err_google_failed_code, response.code())
+                )
+            }
+        } catch (e: Exception) {
+            AuthResult.Error(uiText(R.string.err_no_connection))
+        }
+    }
+
+    private fun responseMessage(response: Response<*>): UiText? {
         return runCatching {
             response.errorBody()?.string()
                 ?.let { JSONObject(it).optString("message").takeIf(String::isNotBlank) }
-        }.getOrNull()
+        }.getOrNull()?.let { UiText.Raw(it) }
     }
 
     fun logout() = sessionManager.clear()

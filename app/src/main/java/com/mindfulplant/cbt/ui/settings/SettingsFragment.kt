@@ -1,7 +1,11 @@
 package com.mindfulplant.cbt.ui.settings
 
 import android.app.TimePickerDialog
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +22,7 @@ import com.mindfulplant.cbt.MindfulPlantApp
 import com.mindfulplant.cbt.R
 import com.mindfulplant.cbt.databinding.FragmentSettingsBinding
 import com.mindfulplant.cbt.util.ReminderPrefs
+import com.mindfulplant.cbt.util.ReminderScheduler
 import com.mindfulplant.cbt.util.SessionManager
 import java.util.Calendar
 
@@ -108,8 +113,19 @@ class SettingsFragment : Fragment() {
                 { _, hour, minute ->
                     reminderPrefs.set(hour, minute)
                     binding.reminderTimeButton.text = reminderPrefs.formatted()
-                    // TODO: reschedule the AlarmManager/WorkManager reminder
-                    // for this new time (Planning and Design, Section 8.1).
+                    ReminderScheduler.schedule(requireContext())
+                    // Android 14+ turns "Alarms & reminders" off by default. Without it the
+                    // reminder can arrive late, so send the user to the one-tap switch.
+                    if (!ReminderScheduler.canScheduleExact(requireContext()) &&
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                    ) {
+                        startActivity(
+                            Intent(
+                                Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                                Uri.parse("package:${requireContext().packageName}")
+                            )
+                        )
+                    }
                 },
                 reminderPrefs.hour,
                 reminderPrefs.minute,
@@ -119,6 +135,7 @@ class SettingsFragment : Fragment() {
 
         binding.logoutButton.setOnClickListener {
             sessionManager.clear()
+            com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
             findNavController().navigate(R.id.action_settings_to_login)
         }
     }

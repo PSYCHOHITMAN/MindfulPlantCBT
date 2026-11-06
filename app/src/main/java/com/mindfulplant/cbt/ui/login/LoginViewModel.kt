@@ -40,9 +40,15 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
-    /** Called after Firebase Authentication's Google Sign-In flow succeeds. */
-    fun onSsoSuccess(userId: String) {
-        _uiState.value = LoginUiState.Success(userId)
+    /** Called after Google + Firebase sign-in succeed: swap the Google token for our API session. */
+    fun ssoLogin(idToken: String) {
+        _uiState.value = LoginUiState.Loading
+        viewModelScope.launch {
+            when (val result = authRepository.ssoLogin(idToken)) {
+                is AuthResult.Success -> _uiState.value = LoginUiState.Success(result.userId)
+                is AuthResult.Error -> _uiState.value = LoginUiState.Error(result.message)
+            }
+        }
     }
 
     fun onSsoError(message: String) {

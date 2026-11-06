@@ -5,10 +5,8 @@ import android.content.Context
 /**
  * Persists the user's chosen daily-reminder time across app restarts, so
  * both the Settings screen and the Home stat pill can show the real saved
- * value rather than a hardcoded default. Scheduling the actual
- * AlarmManager/WorkManager notification for this time is tracked
- * separately (Planning and Design, Section 6: "Real-time push
- * notifications") and is not wired up by this class.
+ * value rather than a hardcoded default. The actual notification is
+ * scheduled by [ReminderScheduler] (WorkManager) using these values.
  */
 class ReminderPrefs(context: Context) {
 

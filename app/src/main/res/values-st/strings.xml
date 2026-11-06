@@ -57,4 +57,8 @@
     <string name="nav_history">Nalane</string>
     <string name="nav_insights">Temoho</string>
     <string name="nav_settings">Diteko</string>
+    <string name="notification_channel_name">Segopotso sa letsatsi le letsatsi</string>
+    <string name="notification_channel_description">Dikgopotso tsa ho ngola maikutlo le menahano ya hao</string>
+    <string name="notification_title">Nako ya ho hlahloba</string>
+    <string name="notification_text">Nka motsotso o ngole maikutlo a hao mme o fetole mohopolo.</string>
 </resources>

@@ -1,5 +1,8 @@
 package com.mindfulplant.cbt.data.repository
 
+import com.mindfulplant.cbt.R
+import com.mindfulplant.cbt.util.UiText
+import com.mindfulplant.cbt.util.uiText
 import com.mindfulplant.cbt.data.local.dao.ThoughtRecordDao
 import com.mindfulplant.cbt.data.local.entity.ThoughtRecordEntity
 import com.mindfulplant.cbt.data.remote.ApiService
@@ -10,7 +13,7 @@ import java.util.UUID
 
 sealed class SyncResult {
     data class Success(val syncedCount: Int, val failedCount: Int = 0) : SyncResult()
-    data class Error(val message: String) : SyncResult()
+    data class Error(val message: UiText) : SyncResult()
 }
 
 /**
@@ -62,7 +65,7 @@ class RecordRepository(
     /** Pushes every "pending" record for this user to the API. */
     suspend fun syncPendingRecords(userId: String): SyncResult {
         val token = sessionManager.authToken
-            ?: return SyncResult.Error("Not logged in.")
+            ?: return SyncResult.Error(uiText(R.string.err_not_logged_in))
 
         val pending = recordDao.getPendingRecords(userId)
         if (pending.isEmpty()) return SyncResult.Success(0)

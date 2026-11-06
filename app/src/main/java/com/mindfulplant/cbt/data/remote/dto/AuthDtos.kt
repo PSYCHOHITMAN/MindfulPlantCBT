@@ -14,6 +14,10 @@ data class LoginRequest(
     val password: String
 )
 
+data class SsoRequest(
+    val idToken: String // Google ID token; the API verifies it with Google
+)
+
 data class AuthResponse(
     val userId: String,
     val fullName: String,

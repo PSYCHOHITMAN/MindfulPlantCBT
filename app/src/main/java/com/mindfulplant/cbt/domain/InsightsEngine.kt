@@ -4,12 +4,14 @@ import com.mindfulplant.cbt.data.local.entity.ThoughtRecordEntity
 
 enum class Trend { UP, DOWN, STEADY, NOT_ENOUGH_DATA }
 
+/** Which sentence to show on the Insights screen. The UI maps each one to a translated string. */
+enum class InsightMessage { NOT_ENOUGH_DATA, BUILDING_HABIT, IMPROVED, DECLINE, PERSISTENT_DECLINE, STEADY }
+
 data class InsightsResult(
     val trend: Trend,
-    val message: String,
+    val message: InsightMessage,
     val mostLoggedDistortion: String?,
     val mostLoggedDistortionCount: Int,
-    val distortionTip: String?,
     /** Average mood-after across the analysed window, out of 5. Null if no entries. */
     val avgMoodAfter: Double?,
     /** Average (moodAfter - moodBefore) across the analysed window - the mood "lift" from doing the exercise itself. */
@@ -40,16 +42,6 @@ object InsightsEngine {
     private const val MIN_ENTRIES_FOR_TREND = 4
     private const val WINDOW_SIZE = 7
 
-    private val DISTORTION_TIPS = mapOf(
-        "Catastrophising" to "Ask yourself: what's the most likely outcome, not just the worst one?",
-        "All-or-nothing thinking" to "Look for the middle ground — few things are purely good or bad.",
-        "Mind-reading" to "When you catch yourself assuming others' thoughts, ask: what's the actual evidence?",
-        "Overgeneralising" to "One event doesn't set the rule — look for the exceptions.",
-        "Emotional reasoning" to "Feeling it doesn't make it true — check the facts separately.",
-        "Should statements" to "Try swapping 'should' for 'it would be nice if' — notice the pressure ease.",
-        "Personalising" to "Ask what else, outside you, might explain what happened."
-    )
-
     /** [records] must already be sorted most-recent-first. */
     fun analyse(records: List<ThoughtRecordEntity>): InsightsResult {
         val streak = StreakCalculator.calculate(records)
@@ -57,10 +49,9 @@ object InsightsEngine {
         if (records.size < MIN_ENTRIES_FOR_TREND) {
             return InsightsResult(
                 trend = Trend.NOT_ENOUGH_DATA,
-                message = "Keep journaling to see your trend - a few more entries and we'll show you how you're doing.",
+                message = InsightMessage.NOT_ENOUGH_DATA,
                 mostLoggedDistortion = null,
                 mostLoggedDistortionCount = 0,
-                distortionTip = null,
                 avgMoodAfter = records.takeIf { it.isNotEmpty() }?.map { it.moodAfter }?.average(),
                 avgMoodLift = records.takeIf { it.isNotEmpty() }?.map { (it.moodAfter - it.moodBefore).toDouble() }?.average(),
                 streak = streak,
@@ -73,12 +64,12 @@ object InsightsEngine {
 
         val recentAvg = recentWindow.map { it.moodAfter }.average()
         val trend: Trend
-        val message: String
+        val message: InsightMessage
 
         if (previousWindow.isEmpty()) {
             // Not enough history yet for a comparison, but enough for a first read.
             trend = Trend.STEADY
-            message = "You're building a great journaling habit. Keep it up!"
+            message = InsightMessage.BUILDING_HABIT
         } else {
             val previousAvg = previousWindow.map { it.moodAfter }.average()
             val delta = recentAvg - previousAvg
@@ -86,19 +77,19 @@ object InsightsEngine {
             when {
                 delta >= TREND_THRESHOLD -> {
                     trend = Trend.UP
-                    message = "Your mood has improved this week - keep up your journaling streak!"
+                    message = InsightMessage.IMPROVED
                 }
                 delta <= -TREND_THRESHOLD -> {
                     trend = Trend.DOWN
                     message = if (isPersistentDecline(records)) {
-                        "Things have felt heavier for a couple of weeks now. Be kind to yourself, and consider talking to a counsellor or someone you trust."
+                        InsightMessage.PERSISTENT_DECLINE
                     } else {
-                        "Things have felt a bit heavier lately. Be kind to yourself, and consider talking to someone you trust."
+                        InsightMessage.DECLINE
                     }
                 }
                 else -> {
                     trend = Trend.STEADY
-                    message = "Your mood has been fairly steady this week."
+                    message = InsightMessage.STEADY
                 }
             }
         }
@@ -112,7 +103,6 @@ object InsightsEngine {
             message = message,
             mostLoggedDistortion = distortion,
             mostLoggedDistortionCount = count,
-            distortionTip = distortion?.let { DISTORTION_TIPS[it] },
             avgMoodAfter = avgMoodAfter,
             avgMoodLift = avgMoodLift,
             streak = streak,

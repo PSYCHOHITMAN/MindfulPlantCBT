@@ -84,6 +84,14 @@
             android:layout_marginTop="@dimen/spacing_md"
             android:text="@string/login_button" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/googleSignInButton"
+            style="@style/Widget.MPCBT.Button.Outline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:text="@string/login_sso_button" />
+
         <TextView
             android:id="@+id/registerPrompt"
             android:layout_width="wrap_content"
